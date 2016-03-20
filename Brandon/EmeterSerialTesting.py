@@ -3,6 +3,7 @@
 from __future__ import print_function
 import serial
 import sys
+import time
 voltage = 0
 current = 0
 ampHrs = 0
@@ -14,8 +15,8 @@ def main():
     with serial.Serial(port="/dev/ttyUSB0",
                        baudrate=2400, bytesize=8, parity='E',
                        stopbits=1, xonxoff=0, rtscts=0, timeout=1) as ser:
-        print ("Voltage Current AmpHours")
         count = 0
+        print ("Voltage Current AmpHours")
         while True:
             count = count + 1
             findStart(ser)
@@ -32,7 +33,8 @@ def main():
             # message type
             readMessage(ser)
             if count % 8 == 0:
-                print ("%f %f %f \n" % (voltage, current, ampHrs))
+                n =  time.ctime() 
+                print ("%s %f %f %f \n" %(n, voltage, current, ampHrs), end = "") 
     return 0
 
 
@@ -135,3 +137,4 @@ def readData(ser):
 if __name__ == '__main__':
     ret = main()
     sys.exit(ret)
+
