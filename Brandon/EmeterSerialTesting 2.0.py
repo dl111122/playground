@@ -7,6 +7,8 @@ import time
 voltage = 0
 current = 0
 ampHrs = 0
+fiveMinuteAverage = 0
+currentList = []
 ####################################################
 def main():
     # to list serial ports: python -m serial.tools.list_ports
@@ -32,9 +34,17 @@ def main():
                 continue
             # message type
             readMessage(ser)
+            currentlist.append (current)
+            if count % 10 == 0:
+                for currentValues in currentList:
+                    fiveMinuteAverage += currentValue
+                fiveMinuteAverage = fiveMinuteAverage/10
+                while len (currentList) > 0: currentList.pop()
             if count % 8 == 0:
                 n =  time.ctime() 
-                print ("%s %f %f %f \n" %(n, voltage, current, ampHrs), end = "") 
+                print ("%s %f %f %f \n" %(n, voltage, current, ampHrs, fiveMinuteAverage), end = "")
+            
+                
     return 0
 
 

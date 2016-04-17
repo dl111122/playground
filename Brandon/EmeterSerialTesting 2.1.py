@@ -39,7 +39,7 @@ def main():
                 for currentValues in currentList:
                     fiveMinuteAverage += currentValue
                 fiveMinuteAverage = fiveMinuteAverage/300
-                while len (currentList) > 0: del currentList[1]
+                while len (currentList) > 0: del currentList[0]
             if count % 8 == 0:
                 n =  time.ctime() 
                 print ("%s %f %f %f \n" %(n, voltage, current, ampHrs, fiveMinuteAverage), end = "")
