@@ -3,6 +3,7 @@
 from __future__ import print_function
 import serial
 import sys
+import argparse
 import time
 voltage = 0
 current = 0
@@ -12,7 +13,17 @@ def main():
     # to list serial ports: python -m serial.tools.list_ports
     # emeter uses 2400 baud, 8 bits, 1 stop bit, even parity, no hardware flow control
     # on hobbes    
-    with serial.Serial(port="/dev/ttyUSB0",
+    #port = '/dev/cu.usbserial-TEWKZSTK' # on hobbes                             
+    port = '/dev/ttyUSB0'       # on raspberry pi                                
+    parser = argparse.ArgumentParser(description="EmeterSerial")
+    parser.add_argument('--port', dest='port', help='serial port to connect to')
+    args = parser.parse_args()
+    if args.port == None:
+        print('INFO: Using default port %s' % port)
+    else:
+        port = args.port
+
+    with serial.Serial(port=port,
                        baudrate=2400, bytesize=8, parity='E',
                        stopbits=1, xonxoff=0, rtscts=0, timeout=1) as ser:
         count = 0
