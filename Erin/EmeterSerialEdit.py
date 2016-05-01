@@ -1,6 +1,7 @@
 # connect to emeter directly
 
 from __future__ import print_function
+import argparse
 import serial
 import sys
 import time
@@ -22,13 +23,13 @@ def main():
     else:
         port = args.port
 
+    dataFile = "fi"
     with serial.Serial(port=port,
                        baudrate=2400, bytesize=8, parity='E',
-                       stopbits=1, xonxoff=0, rtscts=0, timeout=1) as ser,
-                       open(dataFile, "w") as fi:
-        n = int(time.time())
+                       stopbits=1, xonxoff=0, rtscts=0, timeout=1) as ser, open(dataFile, "w") as fi:
         count = 0
         print ("Voltage Current AmpHours")
+        print ("Time, Main Battery Voltage, Main Battery Current, Main Battery Amp-hours", file = fi)
         while True:
             count = count + 1
             findStart(ser)
@@ -44,8 +45,12 @@ def main():
                 continue
             # message type
             readMessage(ser)
+            if count % 200 == 0:
+                print ("Voltage Current AmpHours")
             if count % 8 == 0:
-                print("%s,%f,%f,%f\n" %(n, voltage, current, ampHrs), end = "", file = fi)
+                n = int(time.time())
+                print("%d,%f,%f,%f\n" %(n, voltage, current, ampHrs), end = "", file = fi)
+                print("%s,%f,%f,%f\n" %(time.asctime() , voltage, current, ampHrs), end = "")
                 fi.flush()
     return 0
                 
